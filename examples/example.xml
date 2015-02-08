@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<song xmlns="http://students.mimuw.edu.pl/~ph320327/xml/xsynth.xsd"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+
+
+    <defs>
+
+        <sine id="sine-wave" amplify="0.5" phase="0.5" />
+
+        <synth id="sine-wave2">
+            <sine freqmul="2.0" amplify="0.5" phase="0.5" />
+        </synth>
+
+        <synth id="bass">
+            <useSynth xlink:href="#sine-wave" />
+            <useSynth xlink:href="#sine-wave" freqmul="2.0" />
+        </synth>
+
+        <synth id="organ">
+            <sine amplify="0.2" freqmul="1.0" />
+            <sine amplify="0.2" freqmul="2.0" />
+            <sine amplify="0.2" freqmul="3.0" />
+            <sine amplify="0.2" freqmul="4.0" />
+            <sine amplify="0.2" freqmul="5.0" />
+        </synth>
+
+        <synth id="tutti-frutti">
+            <sine />
+            <saw />
+            <square />
+            <triangle />
+        </synth>
+
+        <synth id="first-level" amplify="2.0">
+            <synth id="second-level" phase="0.1">
+                <sine />
+            </synth>
+        </synth>
+
+        <synth id="add-them" behavior="add">
+            <sine />
+            <saw />
+        </synth>
+
+        <synth id="multiply-them" behavior="multiply">
+            <sine />
+            <saw />
+        </synth>
+
+    </defs>
+    <score>
+
+        <verse id="bass1">
+            <instrument name="bass">
+                <note start="0" length="2.5" pitch="24"/>
+                <note start="3" length="2.5" pitch="29"/>
+                <note start="6" length="2.5" pitch="24"/>
+                <note start="9" length="2.5" pitch="29"/>
+            </instrument>
+        </verse>
+
+        <verse id="bass2">
+            <instrument name="bass">
+                <note start="0" length="2.5" pitch="29"/>
+                <note start="3" length="2.5" pitch="24"/>
+                <note start="6" length="2.5" pitch="26"/>
+                <note start="9" length="2.5" pitch="24"/>
+            </instrument>
+        </verse>
+
+        <verse id="organ1">
+            <instrument name="organ">
+                <note start="0" length="6" pitch="48"/>
+                <note start="6" length="6" pitch="53"/>
+            </instrument>
+        </verse>
+
+        <verse id="organ2">
+            <instrument name="organ">
+                <note start="0" length="6" pitch="53"/>
+                <note start="6" length="6" pitch="60"/>
+            </instrument>
+            <instrument name="organ">
+                <note start="3" length="2" pitch="60"/>
+                <note start="5" length="1" pitch="72"/>
+                <note start="9" length="2" pitch="65"/>
+                <note start="11" length="1" pitch="72"/>
+            </instrument>
+        </verse>
+
+        <verse id="verse1">
+            <useVerse xlink:href="#bass1" start="0"/>
+            <useVerse xlink:href="#organ1" start="0"/>
+        </verse>
+
+        <verse id="verse2">
+            <useVerse xlink:href="#bass1" start="0"/>
+            <useVerse xlink:href="#organ2" start="0"/>
+        </verse>
+
+        <verse id="refrain">
+            <useVerse xlink:href="#bass2" start="0"/>
+            <useVerse xlink:href="#organ2" start="0"/>
+        </verse>
+
+        <verse id="main">
+            <useVerse xlink:href="#verse1" start="0"/>
+            <useVerse xlink:href="#refrain" start="12"/>
+            <useVerse xlink:href="#verse2" start="24"/>
+            <useVerse xlink:href="#refrain" start="36"/>
+        </verse>
+
+    </score>
+</song>
