@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<song xmlns="http://students.mimuw.edu.pl/~ph320327/xml/xsynth.xsd"
-      xmlns:xlink="http://www.w3.org/1999/xlink">
+<song xmlns="http://students.mimuw.edu.pl/~ph320327/xml/xsynth.xsd">
 
 
     <defs>
@@ -12,8 +11,8 @@
         </synth>
 
         <synth id="bass">
-            <useSynth xlink:href="#sine-wave" />
-            <useSynth xlink:href="#sine-wave" freqmul="2.0" />
+            <useSynth ref="#sine-wave" />
+            <useSynth ref="#sine-wave" freqmul="2.0" />
         </synth>
 
         <synth id="organ">
@@ -89,25 +88,25 @@
         </verse>
 
         <verse id="verse1">
-            <useVerse xlink:href="#bass1" start="0"/>
-            <useVerse xlink:href="#organ1" start="0"/>
+            <useVerse ref="#bass1" start="0"/>
+            <useVerse ref="#organ1" start="0"/>
         </verse>
 
         <verse id="verse2">
-            <useVerse xlink:href="#bass1" start="0"/>
-            <useVerse xlink:href="#organ2" start="0"/>
+            <useVerse ref="#bass1" start="0"/>
+            <useVerse ref="#organ2" start="0"/>
         </verse>
 
         <verse id="refrain">
-            <useVerse xlink:href="#bass2" start="0"/>
-            <useVerse xlink:href="#organ2" start="0"/>
+            <useVerse ref="#bass2" start="0"/>
+            <useVerse ref="#organ2" start="0"/>
         </verse>
 
         <verse id="main">
-            <useVerse xlink:href="#verse1" start="0"/>
-            <useVerse xlink:href="#refrain" start="12"/>
-            <useVerse xlink:href="#verse2" start="24"/>
-            <useVerse xlink:href="#refrain" start="36"/>
+            <useVerse ref="#verse1" start="0"/>
+            <useVerse ref="#refrain" start="12"/>
+            <useVerse ref="#verse2" start="24"/>
+            <useVerse ref="#refrain" start="36"/>
         </verse>
 
     </score>

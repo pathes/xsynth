@@ -5,7 +5,6 @@ import Text.XML.HXT.Core
 import Data.Tree.NTree.TypeDefs ( NTree )
 import Model
 
-
 -- Utilities
 
 atTag :: ArrowXml cat => String -> cat XmlTree XmlTree
@@ -33,7 +32,7 @@ instance Translatable Song where
 
 transSong :: ArrowXml t => t XmlTree Song
 transSong =
-    atTag "song" >>>
+    getChildNamed "song" >>>
     proc song -> do
         defs  <- transDefs  <<< getChildNamed "defs"  -< song
         score <- transScore <<< getChildNamed "score" -< song
@@ -86,10 +85,11 @@ transComplexSynth =
     proc synth -> do
         synthAttrs <- transSynthAttrs -< synth
         behavior <- transComplexSynthBehavior -< synth
+        synthComponents <- listA (transSynth <<< getChildren) -< synth
         returnA -< ComplexSynth {
                 attrs = synthAttrs,
                 behavior = behavior,
-                synthComponents = []
+                synthComponents = synthComponents
             }
 transBasicSynth :: ArrowXml t => BasicSynthType -> t XmlTree Synth
 transBasicSynth synthType =
@@ -122,7 +122,7 @@ transSynthAttrs =
     synthAmplify <- getAttrValue "amplify" -< synth
     synthPhase   <- getAttrValue "phase"   -< synth
     returnA -< SynthAttrs {
-            synthId      = readMaybe synthId,
+            synthId      = refMaybe synthId,
             synthFreqmul = readMaybe synthFreqmul,
             synthAmplify = readMaybe synthAmplify,
             synthPhase   = readMaybe synthPhase
@@ -206,7 +206,11 @@ transUseVerse =
 
 main = do
     result <- runX (
-            readDocument [] "../examples/example2.xml"
+            readDocument [withValidate no
+                               , withTrace 1
+                               , withRemoveWS yes
+                               , withPreserveComment no] "../examples/example.xml"
             >>> transSong
         )
+
     print result
