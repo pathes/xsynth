@@ -203,14 +203,3 @@ transUseVerse =
                 verseStart = read start
             }
 
-
-main = do
-    result <- runX (
-            readDocument [withValidate no
-                               , withTrace 1
-                               , withRemoveWS yes
-                               , withPreserveComment no] "../examples/example.xml"
-            >>> transSong
-        )
-
-    print result
