@@ -7,20 +7,25 @@ import Model
 
 -- Utilities
 
+-- Filters only XML nodes that are properly named elements.
 atTag :: ArrowXml cat => String -> cat XmlTree XmlTree
 atTag tag = isElem >>> hasName tag
 
+-- Converts string to proper Maybe'd value.
 readMaybe :: Read a => String -> Maybe a
 readMaybe string = if string /= "" then Just (read string) else Nothing
 
+-- Converts empty string to Nothing, otherwise it's Maybe'd.
 refMaybe :: String -> Maybe String
 refMaybe string = if string /= "" then Just string else Nothing
 
+-- Gets properly named children.
 getChildrenNamed :: ArrowXml cat => String -> cat (NTree XNode) XmlTree
-getChildrenNamed tag = (this `when` (atTag tag)) <<< getChildren
+getChildrenNamed tag = getChildren >>> atTag tag
 
+-- Gets first (if exists) properly named child.
 getChildNamed :: ArrowXml cat => String -> cat (NTree XNode) XmlTree
-getChildNamed = single <<< getChildrenNamed
+getChildNamed tag = getChildrenNamed tag >>. take 1
 
 
 class Translatable a where
@@ -135,7 +140,7 @@ instance Translatable Score where
 transScore :: ArrowXml t => t XmlTree Score
 transScore =
     proc score -> do
-        verses <- listA (transVerse <<< getChildren) -< score
+        verses <- listA (transVerse <<< getChildrenNamed "verse") -< score
         returnA -< Score {
                 verses = verses
             }
@@ -146,7 +151,6 @@ instance Translatable Verse where
 
 transVerse :: ArrowXml t => t XmlTree Verse
 transVerse =
-    atTag "verse" >>>
     proc verse -> do
         verseId     <- getAttrValue "id" -< verse
         instruments <- listA (transInstrument <<< getChildrenNamed "instrument") -< verse
@@ -197,7 +201,7 @@ transUseVerse =
     proc useVerse -> do
         -- Fails when there's no "ref" attribute
         ref   <- getAttrValue0 "ref"   -< useVerse
-        start <- getAttrValue  "start" -< useVerse
+        start <- getAttrValue0 "start" -< useVerse
         returnA -< UseVerse {
                 verseRef   = ref,
                 verseStart = read start
