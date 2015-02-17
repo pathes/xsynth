@@ -32,6 +32,11 @@ verifySong (Song (Defs synths) (Score verses)) = do
     (synthsMap, versesMap) <- get
     synthDFS synths synthsMap
     verseDFS verses versesMap
+    -- Make sure that the main Verse exists
+    case Map.lookup "main" versesMap of
+        Nothing -> lift $ throwError $
+            "Main verse not found"
+        _ -> return ()
     -- We're done
     return ()
 
