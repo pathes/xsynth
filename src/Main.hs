@@ -43,7 +43,7 @@ main = do
             readDocument [withValidate no
                                , withTrace 1
                                , withRemoveWS yes
-                               , withPreserveComment no] "../examples/example.xml"
+                               , withPreserveComment no] "../examples/smoke.xml"
             >>> transSong
         )
     maybeWave <- generateWAVE (head song)

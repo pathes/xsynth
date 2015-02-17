@@ -17,12 +17,13 @@ type VersesMap = Map.Map String Verse
 type DFSState = RefsSet
 type DFSMonad = StateT DFSState (ErrorT String Identity)
 
-type GenState = (SynthsMap, VersesMap)
-type GenMonad = StateT GenState (ErrorT String Identity)
+type ValState = (SynthsMap, VersesMap)
+type ValMonad = StateT ValState (ErrorT String Identity)
 
 
--- Verifies song. Returns state-error monad containing relevant maps in state.
-verifySong :: Song -> GenMonad ()
+-- Verifies song. Returns state-error monad having relevant maps in state
+-- and returning the main Verse.
+verifySong :: Song -> ValMonad Verse
 verifySong (Song (Defs synths) (Score verses)) = do
     -- Check for synth id duplicates and create synth part of state
     synthDuplicates synths
@@ -36,17 +37,15 @@ verifySong (Song (Defs synths) (Score verses)) = do
     case Map.lookup "main" versesMap of
         Nothing -> lift $ throwError $
             "Main verse not found"
-        _ -> return ()
-    -- We're done
-    return ()
+        Just mainVerse -> return mainVerse
 
 
 -- Checks for synth name duplicates in list of Synths.
 -- Also, adds synths to map in state.
-synthDuplicates :: [Synth] -> GenMonad ()
+synthDuplicates :: [Synth] -> ValMonad ()
 synthDuplicates synths = do
     let
-        synthDuplicates' :: Synth -> GenMonad ()
+        synthDuplicates' :: Synth -> ValMonad ()
         synthDuplicates' synth = do
             case synthId $ attrs synth of
                 Nothing -> return ()
@@ -65,10 +64,10 @@ synthDuplicates synths = do
                 _ -> return ()
     mapM_ synthDuplicates' synths
 
-verseDuplicates :: [Verse] -> GenMonad ()
+verseDuplicates :: [Verse] -> ValMonad ()
 verseDuplicates verses = do
     let
-        verseDuplicates' :: Verse -> GenMonad ()
+        verseDuplicates' :: Verse -> ValMonad ()
         verseDuplicates' verse = do
             case verseId verse of
                 Nothing -> return ()
@@ -83,7 +82,7 @@ verseDuplicates verses = do
     mapM_ verseDuplicates' verses
 
 -- Runs DFS on list of Synths. Checks for circular dependencies.
-synthDFS :: [Synth] -> Map.Map String Synth -> GenMonad ()
+synthDFS :: [Synth] -> Map.Map String Synth -> ValMonad ()
 synthDFS synths synthsMap = do
     let
         synthDFS' :: Synth -> DFSMonad ()
@@ -131,7 +130,7 @@ synthDFS synths synthsMap = do
         Right _ -> return ()
 
 -- Runs DFS on list of Verses. Checks for circular dependencies.
-verseDFS :: [Verse] -> Map.Map String Verse -> GenMonad ()
+verseDFS :: [Verse] -> Map.Map String Verse -> ValMonad ()
 verseDFS verses versesMap = do
     let
         verseDFS' :: Verse -> DFSMonad ()

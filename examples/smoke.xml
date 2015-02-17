@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<song xmlns="http://students.mimuw.edu.pl/~ph320327/xml/xsynth.xsd">
+
+
+    <defs>
+        <saw id="lead" />
+
+        <synth id="bass">
+            <sine />
+            <sine freqmul="2" />
+        </synth>
+
+        <synth id="organ">
+            <sine amplify="0.2" freqmul="1.0" />
+            <sine amplify="0.2" freqmul="2.0" />
+            <sine amplify="0.2" freqmul="3.0" />
+            <sine amplify="0.2" freqmul="4.0" />
+            <sine amplify="0.2" freqmul="5.0" />
+            <sine amplify="0.2" freqmul="8.0" />
+        </synth>
+
+        <synth id="organFourths">
+            <useSynth ref="organ" />
+            <useSynth ref="organ" freqmul="0.75"/>
+        </synth>
+    </defs>
+    <score>
+
+        <verse id="bass1">
+            <instrument name="bass">
+                <note start="0" length="0.23" pitch="45"/>
+                <note start="0.25" length="0.23" pitch="45"/>
+                <note start="0.5" length="0.23" pitch="45"/>
+                <note start="0.75" length="0.23" pitch="45"/>
+            </instrument>
+        </verse>
+
+        <verse id="bass2">
+            <instrument name="bass">
+                <note start="0" length="0.23" pitch="50"/>
+                <note start="0.25" length="0.23" pitch="50"/>
+                <note start="0.5" length="0.23" pitch="50"/>
+                <note start="0.75" length="0.23" pitch="50"/>
+            </instrument>
+        </verse>
+
+        <verse id="bass3">
+            <instrument name="bass">
+                <note start="0" length="0.23" pitch="45"/>
+                <note start="0.25" length="0.23" pitch="42"/>
+                <note start="0.5" length="0.23" pitch="43"/>
+                <note start="0.75" length="0.23" pitch="44"/>
+            </instrument>
+        </verse>
+
+        <verse id="bassChorus">
+            <useVerse ref="bass1" start="0"/>
+            <useVerse ref="bass1" start="1"/>
+            <useVerse ref="bass1" start="2"/>
+            <useVerse ref="bass1" start="3"/>
+            <useVerse ref="bass1" start="4"/>
+            <useVerse ref="bass2" start="5"/>
+            <useVerse ref="bass1" start="6"/>
+            <useVerse ref="bass3" start="7"/>
+        </verse>
+
+        <verse id="chorus">
+            <useVerse ref="bassChorus" start="0"/>
+            <instrument name="organFourths">
+                <note start="0" length="0.23" pitch="69"/>
+                <note start="0.5" length="0.23" pitch="72"/>
+                <note start="1" length="0.73" pitch="74"/>
+                <note start="1.75" length="0.23" pitch="69"/>
+                <note start="2.25" length="0.23" pitch="72"/>
+                <note start="2.75" length="0.23" pitch="75"/>
+                <note start="3" length="0.98" pitch="74"/>
+                <note start="4" length="0.23" pitch="69"/>
+                <note start="4.5" length="0.23" pitch="72"/>
+                <note start="5" length="0.73" pitch="74"/>
+                <note start="5.75" length="0.47" pitch="72"/>
+                <note start="6.25" length="1.48" pitch="69"/>
+            </instrument>
+        </verse>
+
+        <verse id="main">
+            <useVerse ref="chorus" start="0"/>
+            <useVerse ref="chorus" start="8"/>
+        </verse>
+
+    </score>
+</song>
