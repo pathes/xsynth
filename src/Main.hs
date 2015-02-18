@@ -14,39 +14,17 @@ import Model
 import Translator ( transSong )
 import Generator ( generateWAVE )
 
-
---main :: IO ()
---main = do
---    argv <- getArgs
---    (al, src, dst) <- cmdlineOpts argv
---    [rc]  <- runX (application al src dst)
---    if rc >= c_err
---        then exitWith (ExitFailure (0-1))
---        else exitWith ExitSuccess
- 
---cmdlineOpts :: [String] -> IO (SysConfigList, String, String)
---cmdlineOpts argv =
---    return ([withValidate no], argv!!0, argv!!1)
- 
---application :: SysConfigList -> String -> String -> IOSArrow b Int
---application cfg src dst =
---    configSysVars cfg
---    >>>
---    readDocument [] src
---    >>>
---    transSong
---    >>>
---    getErrStatus
-
+main :: IO ()
 main = do
+    argv <- getArgs
     song <- runX (
             readDocument [withValidate no
-                               , withTrace 1
+                               , withTrace 0
                                , withRemoveWS yes
-                               , withPreserveComment no] "../examples/smoke.xml"
+                               , withPreserveComment no] (argv !! 0)
             >>> transSong
         )
     maybeWave <- generateWAVE (head song)
     case maybeWave of
         Nothing -> return ()
-        Just wave -> putWAVEFile "temp.wav" wave
+        Just wave -> putWAVEFile (argv !! 1) wave
