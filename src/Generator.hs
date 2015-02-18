@@ -8,10 +8,11 @@ import Control.Monad.Identity
 import Data.WAVE
 import Data.Maybe ( catMaybes )
 import Data.Fixed ( mod' )
-import Data.Int ( Int32 )
+import Data.Int ( Int32, Int64 )
 import Data.Foldable ( foldrM )
 import qualified Data.Set as Set
 import qualified Data.Map as Map
+import qualified Debug.Trace as Tr
 
 import Model
 import Validator ( SynthsMap, VersesMap, verifySong )
@@ -152,7 +153,7 @@ transNote (BasicSynth attrs synthType) (Note start length pitch) freqmul = do
 
         samples :: [WAVESample]
         samples = take (round $ length * sps) $
-                  map (round . (* fromIntegral (maxBound `div` (10 :: Int32)))) $ -- TODO volume
+                  map (round . (* fromIntegral ((maxBound::Int32) `div` (2 :: Int32)))) $ -- TODO volume
                   generator
 
         start' :: Integer
@@ -225,6 +226,18 @@ mergeFragments behavior fragments =
         merge [] = 0
         merge samples = case behavior of
             Add      -> sum samples
-            Multiply -> product samples
+            Multiply -> normalizedProduct samples
+        normalizedProduct :: [Int32] -> Int32
+        normalizedProduct [] = 0
+        normalizedProduct (x:xs) = normalizedProduct' xs (fromIntegral x :: Int64)
+        normalizedProduct' :: [Int32] -> Int64 -> Int32
+        normalizedProduct' [] res = (fromIntegral res :: Int32)
+        normalizedProduct' (x:xs) res =
+            let
+                x' = fromIntegral x :: Int64
+                mb = fromIntegral (maxBound::Int32) :: Int64
+                res' = (x' * res) `div` mb
+            in
+                normalizedProduct' xs res'
     in
         Fragment start end samples
