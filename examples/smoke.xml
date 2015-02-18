@@ -6,17 +6,17 @@
         <saw id="lead" />
 
         <synth id="bass">
-            <sine />
-            <sine freqmul="2" />
+            <sine amplify="0.3" />
+            <sine amplify="0.3" freqmul="2" />
         </synth>
 
         <synth id="organ">
             <sine amplify="0.2" freqmul="1.0" />
             <sine amplify="0.2" freqmul="2.0" />
             <sine amplify="0.2" freqmul="3.0" />
-            <sine amplify="0.2" freqmul="4.0" />
-            <sine amplify="0.2" freqmul="5.0" />
-            <sine amplify="0.2" freqmul="8.0" />
+            <sine amplify="0.1" freqmul="4.0" />
+            <sine amplify="0.1" freqmul="5.0" />
+            <sine amplify="0.1" freqmul="8.0" />
         </synth>
 
         <synth id="organFourths">

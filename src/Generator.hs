@@ -119,11 +119,11 @@ transInstrument (Instrument name notes) = do
         Nothing -> lift $ throwError $
             "Invalid reference to synth \"" ++ name ++ "\""
         Just synth -> do
-            noteFragments <- mapM (\note -> transNote synth note 1.0) notes
+            noteFragments <- mapM (\note -> transNote synth note 1.0 1.0) notes
             return $ mergeFragments Add noteFragments
 
-transNote :: Synth -> Note -> Double -> GenMonad Fragment
-transNote (BasicSynth attrs synthType) (Note start length pitch) freqmul = do
+transNote :: Synth -> Note -> Double -> Double -> GenMonad Fragment
+transNote (BasicSynth attrs synthType) (Note start length pitch) freqmul volume = do
     let
         -- http://en.wikipedia.org/wiki/MIDI_Tuning_Standard
         freq :: Double
@@ -134,6 +134,10 @@ transNote (BasicSynth attrs synthType) (Note start length pitch) freqmul = do
             Nothing -> 1.0
         freq' :: Double
         freq' = freq / sps
+        volume' :: Double
+        volume' = case synthAmplify attrs of
+            Just x -> x
+            Nothing -> 1.0
 
         saw :: Double -> Double
         saw x = 2.0 * (x -  fromIntegral (floor (x + 0.5)))
@@ -153,7 +157,8 @@ transNote (BasicSynth attrs synthType) (Note start length pitch) freqmul = do
 
         samples :: [WAVESample]
         samples = take (round $ length * sps) $
-                  map (round . (* fromIntegral ((maxBound::Int32) `div` (2 :: Int32)))) $ -- TODO volume
+                  map (round . (* fromIntegral ((maxBound::Int32) `div` (2 :: Int32)))) $
+                  map (* (volume * volume')) $
                   generator
 
         start' :: Integer
@@ -163,19 +168,29 @@ transNote (BasicSynth attrs synthType) (Note start length pitch) freqmul = do
 
     return $ Fragment start' end' samples
 
-transNote (ComplexSynth attrs behavior synthComponents) note freqmul = do
+transNote (ComplexSynth attrs behavior synthComponents) note freqmul volume = do
     let
         freqmul' :: Double
         freqmul' = case synthFreqmul attrs of
             Just x -> x
             Nothing -> 1.0
-    fragments <- mapM (\synth -> transNote synth note (freqmul * freqmul')) synthComponents
+        volume' :: Double
+        volume' = case synthAmplify attrs of
+            Just x -> x
+            Nothing -> 1.0
+    fragments <- mapM
+        (\synth -> transNote synth note (freqmul * freqmul') (volume * volume'))
+        synthComponents
     return $ mergeFragments behavior fragments
 
-transNote (UseSynth attrs name) note freqmul = do
+transNote (UseSynth attrs name) note freqmul volume = do
     let
         freqmul' :: Double
         freqmul' = case synthFreqmul attrs of
+            Just x -> x
+            Nothing -> 1.0
+        volume' :: Double
+        volume' = case synthAmplify attrs of
             Just x -> x
             Nothing -> 1.0
     (synthsMap, _, _) <- get
@@ -184,7 +199,7 @@ transNote (UseSynth attrs name) note freqmul = do
         Nothing -> lift $ throwError $
             "Invalid reference to synth \"" ++ name ++ "\""
         Just synth ->
-            transNote synth note (freqmul * freqmul')
+            transNote synth note (freqmul * freqmul') (volume * volume')
 
 
 -- Joins together Fragments, returns one big fragment
