@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<song xmlns="http://students.mimuw.edu.pl/~ph320327/xml/xsynth.xsd">
+
+
+    <defs>
+
+        <synth id="organ" behavior="multiply">
+            <sine amplify="0.9" />
+            <sine amplify="0.9" freqmul="0.01" />
+        </synth>
+
+    </defs>
+    <score>
+
+        <verse id="main">
+            <instrument name="organ">
+                <note start="0" length="5" pitch="50"/>
+                <note start="1" length="1" pitch="62"/>
+                <note start="2" length="1" pitch="74"/>
+                <note start="3" length="0.3" pitch="86"/>
+            </instrument>
+        </verse>
+
+    </score>
+</song>
