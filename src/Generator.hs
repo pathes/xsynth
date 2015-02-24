@@ -12,7 +12,6 @@ import Data.Int ( Int32, Int64 )
 import Data.Foldable ( foldrM )
 import qualified Data.Set as Set
 import qualified Data.Map as Map
-import qualified Debug.Trace as Tr
 
 import Model
 import Validator ( SynthsMap, VersesMap, verifySong )

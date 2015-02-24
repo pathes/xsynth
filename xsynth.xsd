@@ -3,10 +3,9 @@
     targetNamespace="http://students.mimuw.edu.pl/~ph320327/xml/xsynth.xsd"
     elementFormDefault="qualified"
     xmlns="http://students.mimuw.edu.pl/~ph320327/xml/xsynth.xsd"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://students.mimuw.edu.pl/~ph320327/xml/xsynth.xsd">
 
-    <!-- ref - similar to xlink:href -->
-    <xs:attribute name="ref" type="xs:string"/>
 
     <!-- defs part -->
 
@@ -31,7 +30,7 @@
 
     <!-- use synth -->
     <xs:complexType name="useSynthType">
-        <xs:attribute ref="ref" use="required"/>
+        <xs:attribute name="ref" type="xs:string" use="required"/>
         <xs:attributeGroup ref="synthAttrs"/>
     </xs:complexType>
 
@@ -102,7 +101,7 @@
 
     <!-- use verse -->
     <xs:complexType name="useVerseType">
-        <xs:attribute ref="ref" use="required"/>
+        <xs:attribute name="ref" type="xs:string" use="required"/>
         <xs:attribute name="start" use="required" type="xs:decimal"/>
     </xs:complexType>
 
