@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<song xmlns="http://students.mimuw.edu.pl/~ph320327/xml/xsynth.xsd">
+    <defs>
+	<sine id="sin" />
+	<triangle id="tri" />
+	<square id="squ" />
+	<saw id="saw" />
+    </defs>
+    <score>
+        <verse id="main">
+            <instrument name="sin">
+                <note start="0" length="1" pitch="50" />
+                <note start="1" length="1" pitch="52" />
+            </instrument>
+            <instrument name="tri">
+                <note start="2" length="1" pitch="54" />
+                <note start="3" length="1" pitch="55" />
+            </instrument>
+            <instrument name="squ">
+                <note start="4" length="1" pitch="57" />
+                <note start="5" length="1" pitch="59" />
+            </instrument>
+            <instrument name="saw">
+                <note start="6" length="1" pitch="61" />
+                <note start="7" length="1" pitch="62" />
+            </instrument>
+        </verse>
+    </score>
+</song>
+

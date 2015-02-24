@@ -146,7 +146,7 @@ transNote (BasicSynth attrs synthType) (Note start length pitch) freqmul volume 
         triangle x = (2.0 * abs (2.0 * (x - fromIntegral (floor (x + 0.5))))) - 1
 
         square :: Double -> Double
-        square x = if mod' x 2.0 < 1.0 then 1.0 else -1.0
+        square x = if mod' (2.0 * x) 2.0 < 1.0 then 1.0 else -1.0
 
         generator :: [Double]
         generator = case synthType of
